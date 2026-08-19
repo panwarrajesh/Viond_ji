@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import profileImage from "../public/Gemini_Generated_Image_enri5lenri5lenri.png";
 const RESUME_FILE = "/Vinod_Devatwal_Resume.pdf";
 
@@ -75,27 +75,30 @@ const personal = [
 ];
 
 function PhotoSlot() {
-  const [status, setStatus] = useState("loading"); // loading | ok | empty
-
   return (
-  <div className="photo-slot">
-  <img
-    // src="/Gemini_Generated_Image_enri5lenri5lenri.png"
-        src="/viond.png"
-
-    alt="Vinod Devatwal"
-    className="profile-photo"
-  />
-
-  <span className="corner tl"></span>
-  <span className="corner tr"></span>
-  <span className="corner bl"></span>
-  <span className="corner br"></span>
-</div>
+    <div className="photo-slot">
+      <img src="/viond.png" alt="Vinod Devatwal" className="profile-photo" />
+      <span className="corner tl"></span>
+      <span className="corner tr"></span>
+      <span className="corner bl"></span>
+      <span className="corner br"></span>
+    </div>
   );
 }
 
 export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Lock body scroll while the mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <>
       <header className="topbar">
@@ -107,13 +110,27 @@ export default function App() {
               <div className="tracking-id">TRK-DISPATCH-1986</div>
             </span>
           </div>
-          <nav className="nav-links">
-            <a href="#route"><span className="num">01</span>Route</a>
-            <a href="#cargo"><span className="num">02</span>Cargo</a>
-            <a href="#ledger"><span className="num">03</span>Ledger</a>
-            <a href="#manifest"><span className="num">04</span>Manifest</a>
+
+          <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
+            <a href="#route" onClick={closeMenu}><span className="num">01</span>Route</a>
+            <a href="#cargo" onClick={closeMenu}><span className="num">02</span>Cargo</a>
+            <a href="#ledger" onClick={closeMenu}><span className="num">03</span>Ledger</a>
+            <a href="#manifest" onClick={closeMenu}><span className="num">04</span>Manifest</a>
           </nav>
+
+          <button
+            className={`nav-toggle ${menuOpen ? "open" : ""}`}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
+
+        {menuOpen && <div className="nav-scrim" onClick={closeMenu} />}
       </header>
 
       {/* ---------------- HERO ---------------- */}
@@ -283,26 +300,28 @@ export default function App() {
             <h2 className="section-title">Education</h2>
           </div>
 
-          <table className="edu-table">
-            <thead>
-              <tr>
-                <th>Qualification</th>
-                <th>Board / University</th>
-                <th>Percentage</th>
-                <th>Year</th>
-              </tr>
-            </thead>
-            <tbody>
-              {education.map((e) => (
-                <tr key={e.level}>
-                  <td>{e.level}</td>
-                  <td>{e.board}</td>
-                  <td className="pct">{e.pct}</td>
-                  <td>{e.year}</td>
+          <div className="edu-table-wrap">
+            <table className="edu-table">
+              <thead>
+                <tr>
+                  <th>Qualification</th>
+                  <th>Board / University</th>
+                  <th>Percentage</th>
+                  <th>Year</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {education.map((e) => (
+                  <tr key={e.level}>
+                    <td data-label="Qualification">{e.level}</td>
+                    <td data-label="Board / University">{e.board}</td>
+                    <td className="pct" data-label="Percentage">{e.pct}</td>
+                    <td data-label="Year">{e.year}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
