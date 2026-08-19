@@ -77,7 +77,7 @@ const personal = [
 function PhotoSlot() {
   return (
     <div className="photo-slot">
-      <img src="/viond.png" alt="Vinod Devatwal" className="profile-photo" />
+      <img src="/ChatGPT Image Aug 19, 2026, 05_46_49 PM.png" alt="Vinod Devatwal" className="profile-photo" />
       <span className="corner tl"></span>
       <span className="corner tr"></span>
       <span className="corner bl"></span>
