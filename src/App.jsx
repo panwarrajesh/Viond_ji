@@ -1,7 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-
-const PHOTO_STORAGE_KEY = "vd-portfolio-photo";
-
+import { useState } from "react";
+import profileImage from "../public/Gemini_Generated_Image_enri5lenri5lenri.png";
 const RESUME_FILE = "/Vinod_Devatwal_Resume.pdf";
 
 const experience = [
@@ -77,124 +75,23 @@ const personal = [
 ];
 
 function PhotoSlot() {
-  const [photo, setPhoto] = useState(null); // base64 data-url once uploaded
-  const [fallbackChecked, setFallbackChecked] = useState(false);
-  const [hasFallback, setHasFallback] = useState(false);
-  const fileInputRef = useRef(null);
-
-  // On first load, check if a photo was already uploaded earlier (saved in this browser)
-  useEffect(() => {
-    const saved = localStorage.getItem(PHOTO_STORAGE_KEY);
-    if (saved) setPhoto(saved);
-  }, []);
-
-  const handleFile = (file) => {
-    if (!file || !file.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result;
-      setPhoto(dataUrl);
-      localStorage.setItem(PHOTO_STORAGE_KEY, dataUrl);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const onInputChange = (e) => {
-    const file = e.target.files?.[0];
-    handleFile(file);
-    e.target.value = ""; // allow re-choosing the same file again later
-  };
-
-  const onDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files?.[0];
-    handleFile(file);
-  };
-
-  const removePhoto = (e) => {
-    e.stopPropagation();
-    setPhoto(null);
-    localStorage.removeItem(PHOTO_STORAGE_KEY);
-  };
-
-  // fallback: a /profile.jpg dropped straight into the public folder still works too
-  const showImage = photo || (hasFallback ? "/profile.jpg" : null);
+  const [status, setStatus] = useState("loading"); // loading | ok | empty
 
   return (
-    <div
-      className="photo-slot"
-      onClick={() => fileInputRef.current?.click()}
-      onDragOver={(e) => e.preventDefault()}
-      onDrop={onDrop}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click();
-      }}
-      aria-label="Upload profile photo"
-    >
-      {!fallbackChecked && !photo && (
-        <img
-          src="/profile.jpg"
-          alt=""
-          style={{ display: "none" }}
-          onLoad={() => {
-            setHasFallback(true);
-            setFallbackChecked(true);
-          }}
-          onError={() => setFallbackChecked(true)}
-        />
-      )}
+  <div className="photo-slot">
+  <img
+    // src="/Gemini_Generated_Image_enri5lenri5lenri.png"
+        src="/viond.png"
 
-      {showImage ? (
-        <img src={showImage} alt="Vinod Devatwal" />
-      ) : (
-        <div className="placeholder">
-          <div className="icon">
-            <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="8" r="3.4" />
-              <path d="M4.5 20c1.7-3.6 5-5.4 7.5-5.4s5.8 1.8 7.5 5.4" />
-            </svg>
-          </div>
-          <p>
-            PHOTO YAHAN DAALO
-            <br />
-            click ya drag-drop karo
-          </p>
-        </div>
-      )}
+    alt="Vinod Devatwal"
+    className="profile-photo"
+  />
 
-      <div className="photo-overlay">
-        <span className="photo-overlay-text">
-          {showImage ? "Photo Badlo" : "Photo Add Karo"}
-        </span>
-      </div>
-
-      {showImage && (
-        <button
-          type="button"
-          className="photo-remove-btn"
-          onClick={removePhoto}
-          aria-label="Remove photo"
-          title="Remove photo"
-        >
-          ✕
-        </button>
-      )}
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={onInputChange}
-        style={{ display: "none" }}
-      />
-
-      <span className="corner tl" />
-      <span className="corner tr" />
-      <span className="corner bl" />
-      <span className="corner br" />
-    </div>
+  <span className="corner tl"></span>
+  <span className="corner tr"></span>
+  <span className="corner bl"></span>
+  <span className="corner br"></span>
+</div>
   );
 }
 
